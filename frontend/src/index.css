@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #D4AF37;
+  --color-primary-light: #F4E4BC;
+  --color-secondary: #A52A2A;
+  --color-accent: #1B4332;
+  --color-surface: #FAF9F6;
+  --color-content: #3E2723;
+  --color-earth: #5D4037;
+  
+  --font-display: "Poppins", sans-serif;
+  --font-sans: "Open Sans", sans-serif;
+  --font-brand: "Playfair Display", serif;
+}
+
+@layer utilities {
+  .font-brand {
+    font-family: var(--font-brand);
+  }
+}
+
+@layer utilities {
+  .ornament {
+    letter-spacing: 0.25em;
+    font-weight: 700;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-content font-sans overflow-x-hidden pb-20 md:pb-0;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-surface;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full hover:bg-primary/50 transition-colors;
+}
+
+/* Fancy animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
