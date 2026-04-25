@@ -10,9 +10,11 @@ const ProductManager = () => {
   const [currentProduct, setCurrentProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [categories, setCategories] = useState([]);
+  const [bulkDiscountVal, setBulkDiscountVal] = useState('');
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: '', price: '', oldPrice: '', category: '', tag: '', image: '', images: [], rating: '5', description: '', weight: '', origin: '',
+    name: '', price: '', oldPrice: '', discount: '0', category: '', tag: '', image: '', images: [], rating: '5', description: '', weight: '', origin: '',
     variants: [],
     isWholesale: false, wholesalePrice: '', minWholesaleQty: ''
   });
@@ -84,12 +86,19 @@ const ProductManager = () => {
     if (product) {
       setCurrentProduct(product);
       setFormData({
-        name: product.name, price: product.price, oldPrice: product.oldPrice || '',
-        category: product.category, tag: product.tag || '', image: product.image || '',
+        name: product.name || '',
+        price: product.price || '',
+        oldPrice: product.oldPrice || '',
+        discount: product.discount !== undefined ? product.discount : '0',
+        category: product.category || '',
+        tag: product.tag || '',
+        image: product.image || '',
         images: product.images || [],
-        rating: product.rating || '5', description: product.description || '',
-        weight: product.weight || '', origin: product.origin || '',
-        variants: product.variants || [],
+        rating: product.rating || '5',
+        description: product.description || '',
+        weight: product.weight || '',
+        origin: product.origin || '',
+        variants: product.variants ? [...product.variants] : [],
         isWholesale: product.isWholesale || false,
         wholesalePrice: product.wholesalePrice || '',
         minWholesaleQty: product.minWholesaleQty || ''
@@ -97,7 +106,7 @@ const ProductManager = () => {
     } else {
       setCurrentProduct(null);
       setFormData({
-        name: '', price: '', oldPrice: '', category: '', tag: '', image: '', images: [], rating: '5', description: '', weight: '', origin: '',
+        name: '', price: '', oldPrice: '', discount: '0', category: '', tag: '', image: '', images: [], rating: '5', description: '', weight: '', origin: '',
         variants: [],
         isWholesale: activeTab === 'wholesale',
         wholesalePrice: '', minWholesaleQty: ''
@@ -109,6 +118,16 @@ const ProductManager = () => {
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
+
+    // Check file size (Max 1MB)
+    const maxSize = 1 * 1024 * 1024;
+    const oversizedFiles = files.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      alert("Ek ya ek se zyada images 1MB se badi hain. Kripya 1MB se kam ki images upload karein.");
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     setUploading(true);
     const data = new FormData();
     files.forEach(file => data.append('images', file));
@@ -123,6 +142,26 @@ const ProductManager = () => {
         }));
       }
     } catch (err) { console.error(err); } finally { setUploading(false); }
+  };
+
+  const handlePriceDiscountChange = (field, value) => {
+    setFormData(prev => {
+      const newFormData = { ...prev, [field]: value };
+      
+      // Auto-calculate oldPrice if discount is provided
+      if (field === 'price' || field === 'discount') {
+        const priceNum = parseFloat(newFormData.price);
+        const discountNum = parseFloat(newFormData.discount);
+        
+        if (!isNaN(priceNum) && !isNaN(discountNum) && discountNum > 0 && discountNum < 100) {
+          newFormData.oldPrice = Math.round(priceNum / (1 - discountNum / 100));
+        } else if (discountNum === 0) {
+          newFormData.oldPrice = '';
+        }
+      }
+      
+      return newFormData;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -142,6 +181,36 @@ const ProductManager = () => {
     } catch (err) { console.error(err); }
   };
 
+  const handleBulkDiscount = async () => {
+    if (!bulkDiscountVal) return;
+    if (!window.confirm(`Apply ${bulkDiscountVal}% discount to ALL products?`)) return;
+    setIsBulkLoading(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/products/bulk-discount', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ percentage: bulkDiscountVal })
+      });
+      if (res.ok) {
+        alert(`Successfully applied ${bulkDiscountVal}% discount!`);
+        fetchData();
+        setBulkDiscountVal('');
+      }
+    } catch (err) { console.error(err); } finally { setIsBulkLoading(false); }
+  };
+
+  const handleClearDiscounts = async () => {
+    if (!window.confirm('Clear all discounts and restore original prices?')) return;
+    setIsBulkLoading(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/products/clear-discounts', { method: 'POST' });
+      if (res.ok) {
+        alert('All discounts cleared!');
+        fetchData();
+      }
+    } catch (err) { console.error(err); } finally { setIsBulkLoading(false); }
+  };
+
   const handleDeleteProduct = async (id) => {
     if (window.confirm('Delete this product?')) {
       try {
@@ -159,13 +228,45 @@ const ProductManager = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-[2rem] border border-secondary/5 shadow-sm">
-        <div className="flex bg-surface p-1 rounded-xl border border-secondary/10">
-           {['retail', 'wholesale'].map(tab => (
-             <button key={tab} onClick={() => setActiveTab(tab)} className={`px-6 py-2 rounded-lg text-xs font-bold transition-all uppercase tracking-widest ${activeTab === tab ? 'bg-white text-secondary shadow-sm' : 'text-content/40 hover:text-content'}`}>
-                {tab}
-             </button>
-           ))}
+        <div className="flex flex-col gap-1">
+          <div className="flex bg-surface p-1 rounded-xl border border-secondary/10">
+             {['retail', 'wholesale'].map(tab => (
+               <button key={tab} onClick={() => setActiveTab(tab)} className={`px-6 py-2 rounded-lg text-xs font-bold transition-all uppercase tracking-widest ${activeTab === tab ? 'bg-white text-secondary shadow-sm' : 'text-content/40 hover:text-content'}`}>
+                  {tab}
+               </button>
+             ))}
+          </div>
+          <p className="text-[9px] font-bold text-content/20 uppercase tracking-widest ml-1 mt-1">Manage Product Listings</p>
         </div>
+
+        <div className="flex flex-wrap items-center gap-4 bg-secondary/5 p-4 rounded-2xl border border-secondary/10">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-secondary whitespace-nowrap">Festival Sale:</span>
+            <input 
+              type="number" 
+              placeholder="%" 
+              value={bulkDiscountVal}
+              onChange={(e) => setBulkDiscountVal(e.target.value)}
+              className="w-16 px-3 py-1.5 bg-white border border-secondary/20 rounded-lg text-xs font-bold outline-none focus:ring-2 focus:ring-secondary/20" 
+            />
+            <button 
+              onClick={handleBulkDiscount}
+              disabled={isBulkLoading || !bulkDiscountVal}
+              className="bg-secondary text-white px-4 py-1.5 rounded-lg font-bold text-[10px] uppercase tracking-widest hover:bg-content transition-all disabled:opacity-50"
+            >
+              {isBulkLoading ? '...' : 'Apply All'}
+            </button>
+          </div>
+          <div className="h-6 w-px bg-secondary/10 hidden md:block"></div>
+          <button 
+            onClick={handleClearDiscounts}
+            disabled={isBulkLoading}
+            className="text-red-500 hover:text-red-600 font-bold text-[10px] uppercase tracking-widest transition-colors"
+          >
+            Clear All
+          </button>
+        </div>
+
         <div className="flex w-full md:w-auto gap-3">
           <div className="relative flex-1 md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-content/30" size={16} />
@@ -250,7 +351,15 @@ const ProductManager = () => {
                    {/* Simplified for brevity while keeping core logic */}
                    <div>
                       <label className="text-[10px] font-black uppercase tracking-widest text-content/30 mb-2 block">Price (₹)</label>
-                      <input type="number" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} className="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm" required />
+                      <input type="number" value={formData.price} onChange={(e) => handlePriceDiscountChange('price', e.target.value)} className="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm" required />
+                   </div>
+                   <div>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-content/30 mb-2 block">Discount (%)</label>
+                      <input type="number" value={formData.discount} onChange={(e) => handlePriceDiscountChange('discount', e.target.value)} className="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm" placeholder="e.g. 50" />
+                   </div>
+                   <div>
+                      <label className="text-[10px] font-black uppercase tracking-widest text-content/30 mb-2 block">Old Price (M.R.P.)</label>
+                      <input type="number" value={formData.oldPrice} onChange={(e) => setFormData({...formData, oldPrice: e.target.value})} className="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm" placeholder="Auto-calculated" />
                    </div>
                    <div>
                       <label className="text-[10px] font-black uppercase tracking-widest text-content/30 mb-2 block">Category</label>
@@ -279,6 +388,21 @@ const ProductManager = () => {
                    <div>
                        <label className="text-[10px] font-black uppercase tracking-widest text-content/30 mb-2 block">Origin</label>
                        <input type="text" value={formData.origin} onChange={(e) => setFormData({...formData, origin: e.target.value})} className="w-full bg-surface border-none rounded-xl px-4 py-3 text-sm" placeholder="e.g. India" />
+                   </div>
+                   <div>
+                       <label className="text-[10px] font-black uppercase tracking-widest text-content/30 mb-2 block">Rating (1-5 Stars)</label>
+                       <div className="flex items-center gap-3 bg-surface rounded-xl px-4 py-2">
+                          <input 
+                             type="range" 
+                             min="1" 
+                             max="5" 
+                             step="0.5"
+                             value={formData.rating} 
+                             onChange={(e) => setFormData({...formData, rating: e.target.value})} 
+                             className="flex-1 accent-secondary" 
+                          />
+                          <span className="font-bold text-secondary text-sm w-8">{formData.rating}⭐</span>
+                       </div>
                    </div>
 
                    {formData.isWholesale && (

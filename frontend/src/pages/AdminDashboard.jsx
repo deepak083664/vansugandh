@@ -7,6 +7,8 @@ import ProductManager from '../components/admin/ProductManager';
 import CategoryManager from '../components/admin/CategoryManager';
 import OrderManager from '../components/admin/OrderManager';
 import UserManager from '../components/admin/UserManager';
+import CouponManager from '../components/admin/CouponManager';
+import BulkDiscountManager from '../components/admin/BulkDiscountManager';
 import { Search, Bell, User as UserIcon, Menu } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -63,6 +65,8 @@ const AdminDashboard = () => {
       case 'categories': return <CategoryManager />;
       case 'orders': return <OrderManager orders={orders} />;
       case 'users': return <UserManager users={users} onDeleteUser={(id) => { /* Reuse logic */ }} />;
+      case 'coupons': return <CouponManager />;
+      case 'discounts': return <BulkDiscountManager />;
       default: return <Overview stats={stats} />;
     }
   };

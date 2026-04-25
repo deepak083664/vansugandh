@@ -161,7 +161,7 @@ const ProductDetails = () => {
                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary bg-secondary/5 px-4 py-1.5 rounded-full border border-secondary/10">{product.category}</span>
                            {product.isWholesale && <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-content/40 bg-surface px-4 py-1.5 rounded-full border border-content/5">Wholesale Ready</span>}
                         </div>
-                        <h1 className="text-3xl md:text-6xl font-bold text-content leading-[1.1] tracking-tight">
+                        <h1 className="text-2xl md:text-5xl font-black text-content leading-tight tracking-tight uppercase">
                             {product.name}
                         </h1>
                     </div>
@@ -175,50 +175,59 @@ const ProductDetails = () => {
                         <span className="font-bold text-sm ml-2">{product.rating || "4.8"}</span>
                         <span className="text-[10px] font-black uppercase tracking-widest text-content/20 ml-2">/ 124 Sales</span>
                     </div>
-
-                     <div className="flex items-center gap-4 py-2">
-                         <span className="text-4xl md:text-6xl font-black text-content tracking-tighter">
-                             ₹{String(selectedVariant ? selectedVariant.price : product.price).replace(/[^0-9.]/g, '')}
-                         </span>
-                         {(selectedVariant?.oldPrice || product.oldPrice) && (
-                             <span className="text-xl md:text-2xl text-content/20 line-through font-bold">
-                                 ₹{String(selectedVariant ? selectedVariant.oldPrice : product.oldPrice).replace(/[^0-9.]/g, '')}
-                             </span>
-                         )}
-                         {(selectedVariant?.oldPrice || product.oldPrice) && (
-                            <span className="bg-secondary text-white text-[10px] md:text-xs font-black uppercase px-3 py-1.5 rounded-lg shadow-lg shadow-secondary/10">
-                                {Math.round((((selectedVariant ? selectedVariant.oldPrice : product.oldPrice) - (selectedVariant ? selectedVariant.price : product.price))/(selectedVariant ? selectedVariant.oldPrice : product.oldPrice))*100)}% OFF
+                    <div className="flex flex-col gap-1 py-2">
+                        <div className="flex items-center gap-3">
+                            <span className="text-2xl md:text-5xl font-black text-content tracking-tighter">
+                                ₹{String(selectedVariant ? selectedVariant.price : product.price).replace(/[^0-9.]/g, '')}
                             </span>
-                         )}
-                     </div>
+                            {(selectedVariant?.oldPrice || product.oldPrice) && (
+                                <span className="text-lg md:text-xl text-content/20 line-through font-bold">
+                                    ₹{String(selectedVariant ? selectedVariant.oldPrice : product.oldPrice).replace(/[^0-9.]/g, '')}
+                                </span>
+                            )}
+                            {(selectedVariant?.oldPrice || product.oldPrice) && (
+                                <span className="bg-secondary text-white text-[10px] md:text-xs font-black uppercase px-3 py-1.5 rounded-lg shadow-lg shadow-secondary/10">
+                                    {Math.round((((selectedVariant ? selectedVariant.oldPrice : product.oldPrice) - (selectedVariant ? selectedVariant.price : product.price))/(selectedVariant ? selectedVariant.oldPrice : product.oldPrice))*100)}% OFF
+                                </span>
+                            )}
+                        </div>
+                        {quantity > 1 && (
+                          <div className="flex items-center gap-2 animate-in fade-in slide-in-from-left duration-500">
+                             <span className="text-xs font-black uppercase tracking-widest text-secondary bg-secondary/5 px-3 py-1 rounded-lg border border-secondary/10">
+                               Total: ₹{parseFloat(String(selectedVariant ? selectedVariant.price : product.price).replace(/[^0-9.]/g, '')) * quantity}
+                             </span>
+                             <span className="text-[10px] font-bold text-content/30 uppercase tracking-widest">for {quantity} items</span>
+                          </div>
+                        )}
+                    </div>
 
                      {/* Weight Variants Selector */}
                      {product.variants && product.variants.length > 0 && (
                         <div>
                            <label className="text-[10px] font-black uppercase tracking-widest text-content/30 block mb-3">Select Weight</label>
-                           <div className="flex flex-wrap gap-2">
-                              {product.variants.map((variant, idx) => (
-                                 <button 
-                                    key={idx}
-                                    onClick={() => setSelectedVariant(variant)}
-                                    className={`px-5 py-2.5 rounded-xl font-bold text-xs transition-all border-2 ${selectedVariant?.weight === variant.weight ? 'bg-secondary text-white border-secondary shadow-lg shadow-secondary/20' : 'bg-surface text-content/60 border-secondary/5 hover:border-secondary/20'}`}
-                                 >
-                                    {variant.weight}
-                                 </button>
-                              ))}
-                           </div>
+                            <div className="flex flex-wrap gap-2">
+                               {product.variants.map((variant, idx) => (
+                                  <button 
+                                     key={idx}
+                                     onClick={() => setSelectedVariant(variant)}
+                                     className={`px-4 py-2 rounded-xl font-black text-[10px] md:text-xs transition-all border-2 ${selectedVariant?.weight === variant.weight ? 'bg-secondary text-white border-secondary shadow-md shadow-secondary/20' : 'bg-surface text-content/40 border-secondary/5 hover:border-secondary/20'}`}
+                                  >
+                                     {variant.weight}
+                                  </button>
+                               ))}
+                            </div>
                         </div>
                      )}
 
                      {/* Attributes */}
                      <div className="grid grid-cols-2 gap-3 pb-2">
-                        <div className="bg-surface/50 p-4 md:p-6 rounded-none flex flex-col gap-1 md:gap-1.5 border border-secondary/5">
-                            <span className="text-[10px] text-content/30 font-bold uppercase tracking-[0.2em]">Weight</span>
-                            <span className="text-content font-bold text-lg md:text-xl">{selectedVariant ? selectedVariant.weight : (product.weight || '250g')}</span>
+                        <div className="bg-surface/50 p-4 md:p-6 rounded-none flex flex-col gap-1 border border-secondary/5">
+                            <span className="text-[9px] text-content/30 font-bold uppercase tracking-[0.2em]">Weight</span>
+                            <span className="text-content font-black text-base md:text-xl">{selectedVariant ? selectedVariant.weight : (product.weight || '250g')}</span>
                         </div>
-                        <div className="bg-surface/50 p-4 md:p-6 rounded-none flex flex-col gap-1 md:gap-1.5 border border-secondary/5">
-                            <span className="text-[10px] text-content/30 font-bold uppercase tracking-[0.2em]">Origin</span>
-                            <span className="text-content font-bold text-lg md:text-xl">{product.origin || 'India'}</span>
+                        <div className="bg-surface/50 p-4 md:p-6 rounded-none flex flex-col gap-1 border border-secondary/5">
+                            <span className="text-[9px] text-content/30 font-bold uppercase tracking-[0.2em]">Origin</span>
+                            <span className="text-content font-black text-base md:text-xl">{product.origin || 'India'}</span>
                         </div>
                     </div>
                 </div>
@@ -280,7 +289,7 @@ const ProductDetails = () => {
                     {/* Description Section */}
                     <div className="pt-6 border-t border-secondary/5">
                         <h4 className="text-xs font-bold uppercase tracking-widest text-secondary mb-3">Product Description</h4>
-                        <p className="text-content/60 text-base leading-relaxed font-sans">
+                        <p className="text-content/60 text-base leading-relaxed font-sans whitespace-pre-wrap">
                             {product.description || "Experience the authentic taste of India with our premium quality spices. Carefully sourced, cleaned, and packed to preserve their natural aroma and flavor."}
                         </p>
                     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ShoppingBag, User, Menu, X, Heart } from 'lucide-react';
+import { Search, ShoppingBag, User, Menu, X, Heart, Package } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -14,6 +14,19 @@ const Navbar = () => {
   const { getCartCount, setIsCartOpen } = useCart();
   const { wishlist, setIsWishlistOpen } = useWishlist();
   const { user, loginWithGoogle, logout } = useContext(AuthContext);
+  
+  // Disable scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isMobileMenuOpen]);
 
   
   // Secret Admin Trigger State
@@ -52,16 +65,16 @@ const Navbar = () => {
     { name: 'Products', path: '/products' },
     { name: 'Wholesale', path: '/wholesale' },
     { name: 'Contact Us', path: '#' },
-    { name: 'About', path: '#' }
+    { name: 'About', path: '/about' }
   ];
 
   return (
     <nav className="sticky top-0 z-50 transition-all duration-300 bg-surface/90 backdrop-blur-md shadow-sm py-2">
-      <div className="container mx-auto px-4 flex items-center justify-between">
+      <div className="container mx-auto px-2 flex items-center justify-between">
         {/* Logo */}
         <div 
           onClick={handleLogoClick}
-          className="flex-1 flex items-center gap-3 group cursor-pointer"
+          className="flex-1 flex items-center gap-1.5 group cursor-pointer -ml-1"
         >
             <img 
               src="/logo.jpeg" 
@@ -71,7 +84,7 @@ const Navbar = () => {
             <img 
               src="/brandname.png" 
               alt="VanSugandh" 
-              className="h-6 md:h-8 w-auto object-contain transition-transform group-hover:scale-105"
+              className="h-8 md:h-11 w-auto object-contain transition-transform group-hover:scale-105"
             />
         </div>
 
@@ -90,7 +103,7 @@ const Navbar = () => {
         </div>
 
         {/* Icons - Right */}
-        <div className="flex-1 flex items-center justify-end space-x-5">
+        <div className="flex-1 flex items-center justify-end space-x-3 md:space-x-5">
           <button className="text-content hover:text-secondary p-1 transition-transform hover:scale-110 hidden sm:block">
             <Search size={22} strokeWidth={1.5} />
           </button>
@@ -106,16 +119,9 @@ const Navbar = () => {
             )}
           </button>
           {user ? (
-            <div className="relative group hidden sm:block">
-              <div className="flex items-center gap-2 cursor-pointer p-1">
-                <img src={user.avatar || 'https://via.placeholder.com/150'} alt={user.name} className="w-7 h-7 rounded-full shadow-sm" />
-                <span className="text-sm font-semibold text-content">{user.name.split(' ')[0]}</span>
-              </div>
-              <div className="absolute right-0 top-full mt-1 w-40 bg-white shadow-xl rounded-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right border border-black/5 z-50">
-                <div className="block px-4 py-2 text-sm text-content/80 hover:bg-primary/10 hover:text-primary cursor-pointer transition-colors">My Profile</div>
-                <div onClick={logout} className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 cursor-pointer transition-colors">Logout</div>
-              </div>
-            </div>
+            <Link to="/profile" className="hidden sm:block p-1 text-content hover:text-secondary transition-transform hover:scale-110">
+              <User size={22} strokeWidth={1.5} />
+            </Link>
           ) : (
             <button onClick={loginWithGoogle} className="hidden sm:flex items-center gap-2 bg-white text-content/80 border border-content/10 hover:border-content/20 hover:shadow-sm px-3 py-1.5 rounded-full text-xs font-semibold transition-all">
                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-4 h-4" />
@@ -145,6 +151,19 @@ const Navbar = () => {
             )}
           </button>
           
+          {/* Profile - Mobile */}
+          <div className="lg:hidden flex items-center">
+            {user ? (
+              <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)} className="p-1 text-content">
+                <User size={22} strokeWidth={1.5} />
+              </Link>
+            ) : (
+              <button onClick={loginWithGoogle} className="p-1 text-content/70">
+                <User size={22} strokeWidth={1.5} />
+              </button>
+            )}
+          </div>
+          
           <button className="lg:hidden text-content p-1" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -153,17 +172,56 @@ const Navbar = () => {
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-content/5 py-4 px-6 flex flex-col gap-4">
+        <div className="lg:hidden fixed inset-0 top-[60px] w-full h-screen bg-white shadow-xl border-t border-content/5 py-8 px-6 flex flex-col gap-4 z-[100] animate-in slide-in-from-top duration-300 overflow-y-auto">
           {navItems.map((item) => (
             <Link 
               key={item.name} 
               to={item.path} 
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`font-medium py-2 border-b border-content/5 ${location.pathname === item.path && item.path !== '#' ? 'text-secondary' : 'text-content/80'}`}
+              className={`font-semibold py-3 border-b border-secondary/5 uppercase tracking-widest text-[10px] ${location.pathname === item.path && item.path !== '#' ? 'text-secondary' : 'text-content/80'}`}
             >
               {item.name}
             </Link>
           ))}
+          
+          {/* Mobile Profile Actions */}
+          <div className="mt-4 pt-4 border-t border-secondary/10 flex flex-col gap-4">
+            {user ? (
+              <>
+                <Link 
+                  to="/profile" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 text-content/80 font-bold text-xs uppercase tracking-widest"
+                >
+                  <User size={18} className="text-secondary" />
+                  My Profile
+                </Link>
+                <Link 
+                  to="/myorders" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 text-content/80 font-bold text-xs uppercase tracking-widest"
+                >
+                  <Package size={18} className="text-secondary" />
+                  My Orders
+                </Link>
+                <button 
+                  onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                  className="flex items-center gap-3 text-red-500 font-bold text-xs uppercase tracking-widest text-left"
+                >
+                  <X size={18} />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button 
+                onClick={() => { loginWithGoogle(); setIsMobileMenuOpen(false); }}
+                className="flex items-center gap-3 text-secondary font-bold text-xs uppercase tracking-widest text-left"
+              >
+                <User size={18} />
+                Login / Register
+              </button>
+            )}
+          </div>
         </div>
       )}
     </nav>

@@ -33,12 +33,12 @@ const Testimonials = () => {
   }, []);
 
   return (
-    <section className="py-24 bg-surface overflow-hidden relative">
+    <section className="pt-8 pb-24 bg-surface overflow-hidden relative">
       {/* Background Element */}
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2"></div>
       
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <span className="text-secondary font-bold tracking-widest uppercase text-xs mb-3 block">From Our Customers</span>
           <h2 className="text-4xl md:text-5xl font-bold text-content">Words of Love</h2>
         </div>

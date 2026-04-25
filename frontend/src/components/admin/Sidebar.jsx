@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Package, ShoppingCart, Users, BarChart3, LogOut, Store, ChevronRight, X } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, BarChart3, LogOut, Store, ChevronRight, X, Tag, Zap } from 'lucide-react';
 
 const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, onClose }) => {
   const menuItems = [
@@ -9,6 +9,8 @@ const Sidebar = ({ activeTab, setActiveTab, onLogout, isOpen, onClose }) => {
     { id: 'categories', label: 'Categories', icon: <Store size={20} /> },
     { id: 'orders', label: 'Orders', icon: <ShoppingCart size={20} /> },
     { id: 'users', label: 'Users', icon: <Users size={20} /> },
+    { id: 'coupons', label: 'Coupons', icon: <Tag size={20} /> },
+    { id: 'discounts', label: 'Bulk Discount', icon: <Zap size={20} /> },
   ];
 
   return (

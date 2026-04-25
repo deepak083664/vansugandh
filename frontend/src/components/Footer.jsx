@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -10,19 +10,31 @@ const Footer = () => {
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-3">
               <img src="/logo.jpeg" alt="VanSugandh" className="h-10 w-10 rounded-full" />
-              <span className="text-2xl font-bold tracking-tight text-white font-brand">VanSugandh</span>
+              <img src="/brandname.png" alt="VanSugandh" className="h-8 w-auto object-contain brightness-0 invert" />
             </div>
             <p className="text-white/60 text-sm leading-relaxed max-w-xs font-medium">
               Bringing the most authentic, hand-picked, and sun-dried Indian spices directly to your kitchen. Taste the purity in every pinch.
             </p>
+            <div className="flex gap-4">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-secondary hover:text-white transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              </a>
+              <a href="https://wa.me/message/HGMGQQTEPCS4C1" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-green-500 hover:text-white transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              </a>
+              <a href="tel:6206719403" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-blue-500 hover:text-white transition-all">
+                <Phone size={20} />
+              </a>
+            </div>
           </div>
 
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest text-[10px] mb-8">Quick Links</h4>
             <ul className="space-y-4 text-surface/70 text-sm">
-              {['About Us', 'Products Collection', 'Wholesale', 'Contact Us'].map((item) => (
-                <li key={item}><a href={item === 'Products Collection' ? '/products' : item === 'Wholesale' ? '/wholesale' : '#'} className="hover:text-primary transition-colors">{item}</a></li>
-              ))}
+              <li><a href="/about" className="hover:text-primary transition-colors">About Us</a></li>
+              <li><a href="/products" className="hover:text-primary transition-colors">Products Collection</a></li>
+              <li><a href="/wholesale" className="hover:text-primary transition-colors">Wholesale</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Contact Us</a></li>
             </ul>
           </div>
 
@@ -40,38 +52,31 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest text-[10px] mb-8">Get In Touch</h4>
             <ul className="space-y-4 text-surface/70 text-sm">
-              <li className="flex items-start gap-3">
-                <MapPin size={18} className="text-[#ea4335] shrink-0 fill-[#ea4335]/10" />
-                <span>124/B Heritage Square, Old Town Market, Mumbai — 400001</span>
+              <li className="flex items-center gap-3 hover:text-white transition-colors">
+                <Phone size={18} className="text-secondary" />
+                <a href="tel:6206719403">Phone: 6206719403</a>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone size={18} className="text-[#2563eb] shrink-0 fill-[#2563eb]/10" />
-                <span>+91 98765 43210</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail size={18} className="text-[#ea4335] shrink-0 fill-[#ea4335]/10" />
-                <span>hello@vansugandh.com</span>
+              <li className="flex items-center gap-3 hover:text-white transition-colors">
+                <Mail size={18} className="text-secondary" />
+                <a href="mailto:vansugandh@gmail.com">Email: vansugandh@gmail.com</a>
               </li>
             </ul>
-            
-            <div className="mt-8">
-                <p className="text-xs font-bold uppercase tracking-widest text-surface/40 mb-3">Subscribe to Newsletter</p>
-                <div className="flex gap-2">
-                    <input type="email" placeholder="Email Address" className="bg-white/5 border border-white/10 px-4 py-2 rounded-lg focus:outline-none focus:border-primary flex-1 text-sm" />
-                    <button className="bg-primary text-content px-4 py-2 rounded-lg font-bold hover:bg-white transition-colors">Join</button>
-                </div>
-            </div>
           </div>
         </div>
 
         <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-surface/30 text-xs font-sans tracking-wide">
-            © 2026 VanSugandh Foods Pvt Ltd. All Rights Reserved.
-          </p>
+          <div className="flex flex-col gap-2 items-center md:items-start">
+            <p className="text-surface/30 text-xs font-sans tracking-wide">
+              © 2026 VanSugandh Foods Pvt Ltd. All Rights Reserved.
+            </p>
+            <p className="text-surface/60 text-sm font-bold tracking-wider">
+              Designed and Developed by <a href="https://launchliftx.com" target="_blank" rel="noopener noreferrer" className="text-secondary hover:text-white transition-colors underline underline-offset-4">LaunchLiftX</a>
+            </p>
+          </div>
           <div className="flex gap-8 text-xs font-sans text-surface/30">
-            <a href="#" className="hover:text-primary">Privacy Policy</a>
-            <a href="#" className="hover:text-primary">Terms of Service</a>
-            <a href="#" className="hover:text-primary">Return Policy</a>
+            <a href="/privacy" className="hover:text-primary">Privacy Policy</a>
+            <a href="/terms" className="hover:text-primary">Terms of Service</a>
+            <a href="/return-policy" className="hover:text-primary">Return Policy</a>
           </div>
         </div>
       </div>

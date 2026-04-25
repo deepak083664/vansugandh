@@ -44,6 +44,14 @@ const CategoryManager = () => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
     
+    // Check file size (Max 1MB)
+    const maxSize = 1 * 1024 * 1024;
+    if (files[0].size > maxSize) {
+      alert("Image size 1MB se zyada hai. Kripya 1MB se kam ki image upload karein.");
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     setUploading(true);
     const data = new FormData();
     for (const file of files) {

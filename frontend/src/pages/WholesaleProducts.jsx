@@ -8,10 +8,10 @@ const fallbackWholesaleProducts = [
 ];
 
 const WholesaleProductCard = ({ product }) => (
-  <div className="group bg-white rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] transition-all duration-500 border border-content/10 relative flex flex-col h-full hover:-translate-y-2">
+  <div className="group bg-white rounded-2xl overflow-hidden transition-all duration-500 relative flex flex-col h-full border border-secondary/5 shadow-md hover:shadow-2xl hover:-translate-y-1">
     {product.tag && (
-      <div className="absolute top-5 left-5 z-20">
-          <span className="bg-primary/95 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest leading-none shadow-md">
+      <div className="absolute top-4 left-4 z-20">
+          <span className="bg-primary text-content text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
               {product.tag}
           </span>
       </div>
@@ -19,40 +19,48 @@ const WholesaleProductCard = ({ product }) => (
     
     <Link to={`/product/${product._id || product.id}`} className="absolute inset-0 z-30 block" />
 
-    <div className="relative aspect-[4/5] overflow-hidden bg-surface">
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
-      <img src={product.image || heroImage} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-[1.15] transition-transform duration-700 ease-out z-0 relative origin-center" />
+    {/* Image Container */}
+    <div className="relative aspect-square overflow-hidden bg-surface/50">
+      <img src={product.image || heroImage} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out" />
       
-      <div className="absolute bottom-6 left-0 right-0 px-6 z-30 flex justify-center">
-          <button className="w-full bg-secondary text-white py-3.5 rounded-2xl font-bold translate-y-16 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-2 shadow-xl hover:shadow-secondary/30">
-            <ShoppingCart size={18} className="transform group-hover:-rotate-12 transition-transform duration-300" />
-            <span>Add to Bulk Order</span>
+      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center p-6">
+          <button className="w-full bg-white text-content py-3 rounded-xl font-bold translate-y-4 group-hover:translate-y-0 transition-all duration-500 flex items-center justify-center gap-2 hover:bg-secondary hover:text-white shadow-xl">
+            <ShoppingCart size={16} />
+            <span className="text-xs uppercase tracking-widest">Add to Bulk Order</span>
           </button>
       </div>
     </div>
 
-    <div className="p-6 pt-5 bg-white z-20 relative grow flex flex-col justify-between border-t-4 border-secondary">
-      <div>
-          <div className="flex items-center gap-2 mb-3 bg-surface w-fit px-3 py-1.5 rounded-full">
-            <PackageOpen size={14} className="text-secondary" />
-            <span className="text-[10px] font-black text-content uppercase tracking-widest">Min Order: {product.minWholesaleQty || 20} kg</span>
+    <div className="p-5 flex flex-col grow bg-white">
+      <div className="mb-4">
+          <div className="flex items-center gap-2 mb-3 bg-secondary/5 w-fit px-3 py-1 rounded-full border border-secondary/5">
+            <PackageOpen size={12} className="text-secondary" />
+            <span className="text-[9px] font-black text-secondary uppercase tracking-widest">Min: {product.minWholesaleQty || 20} kg</span>
           </div>
-          <h3 className="text-lg font-bold text-content leading-tight mb-4 group-hover:text-secondary transition-all duration-300 tracking-tight line-clamp-2 min-h-[3rem]">{product.name}</h3>
+          <h3 className="text-lg md:text-xl font-bold text-content font-display leading-snug hover:text-secondary transition-colors tracking-tight line-clamp-2 min-h-[2.5rem]">{product.name}</h3>
       </div>
       
-      <div className="flex flex-col gap-4 mt-auto pt-4 border-t border-content/5">
-        <div className="flex items-center gap-4">
+      <div className="mt-auto pt-4 border-t border-secondary/5">
+        <div className="flex items-center justify-between mb-2">
             <div className="flex flex-col">
-                <span className="text-[9px] font-bold text-content/40 uppercase tracking-[0.2em] mb-1">Wholesale Rate</span>
-                <span className="text-3xl font-black text-content tracking-tighter leading-none">₹{String(product.wholesalePrice || product.price).replace(/[^0-9.]/g, '')}</span>
+                <span className="text-[8px] font-bold text-content/30 uppercase tracking-[0.2em] mb-1">Wholesale Rate</span>
+                <span className="text-2xl font-black text-content tracking-tighter leading-none">₹{String(product.wholesalePrice || product.price).replace(/[^0-9.]/g, '')}</span>
             </div>
-            <div className="flex flex-col border-l border-content/10 pl-4">
-                <span className="text-[9px] font-bold text-content/30 uppercase tracking-[0.2em] mb-1">Retail Prive</span>
-                <span className="text-base font-bold text-content/20 line-through tracking-tighter leading-none">₹{String(product.price).replace(/[^0-9.]/g, '')}</span>
+            <div className="flex flex-col items-end">
+                <span className="text-[8px] font-bold text-content/20 uppercase tracking-[0.2em] mb-1">M.R.P.</span>
+                <span className="text-sm font-bold text-content/20 line-through tracking-tighter leading-none">
+                  ₹{product.price && product.price > (product.wholesalePrice || 0) 
+                    ? String(product.price).replace(/[^0-9.]/g, '') 
+                    : Math.round(parseFloat(String(product.wholesalePrice || product.price).replace(/[^0-9.]/g, '')) * 1.4)}
+                </span>
             </div>
         </div>
-        <div className="bg-secondary/5 border border-secondary/10 py-2 px-3 rounded-xl text-center">
-            <span className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Bulk Savings Enabled</span>
+        <div className="mt-2 bg-green-50 rounded-lg py-2 px-3 text-center border border-green-100">
+            <span className="text-[9px] font-black text-green-600 uppercase tracking-widest">
+              Save {product.price && product.price > (product.wholesalePrice || 0)
+                ? Math.round((1 - (parseFloat(String(product.wholesalePrice).replace(/[^0-9.]/g, '')) / parseFloat(String(product.oldPrice || product.price).replace(/[^0-9.]/g, '')))) * 100)
+                : 40}% with Bulk Pricing
+            </span>
         </div>
       </div>
     </div>

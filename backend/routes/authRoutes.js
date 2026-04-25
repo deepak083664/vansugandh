@@ -5,7 +5,7 @@ const { logoutUser, getMe, googleCallback } = require('../controllers/authContro
 const { protect } = require('../middleware/auth');
 
 // Google Auth Route
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false, prompt: 'select_account' }));
 
 // Google Auth Callback
 router.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login` }), googleCallback);

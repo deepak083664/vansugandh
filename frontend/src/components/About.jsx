@@ -4,7 +4,7 @@ import { Award, Zap, ShieldCheck } from 'lucide-react';
 
 const About = () => {
   return (
-    <section className="pb-24 pt-0 bg-surface relative overflow-hidden">
+    <section className="pb-8 pt-0 bg-surface relative overflow-hidden">
       {/* Full-width Image Banner */}
       <div className="w-full h-[400px] md:h-[600px] relative overflow-hidden mb-16">
           <img 
@@ -18,8 +18,9 @@ const About = () => {
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto space-y-12 text-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-content leading-tight tracking-tight">
-                VANSUNGANDH:<br/><span className="text-secondary uppercase text-xl font-black tracking-[0.1em]">The Fragrance of Purity</span>
+              <h2 className="flex flex-col items-center gap-4 text-4xl md:text-5xl font-bold text-content leading-tight tracking-tight">
+                <img src="/brandname.png" alt="VanSugandh" className="h-16 md:h-24 w-auto object-contain" />
+                <span className="text-secondary uppercase text-xl font-black tracking-[0.1em]">The Fragrance of Purity</span>
               </h2>
             </div>
             
@@ -31,18 +32,18 @@ const About = () => {
               Derived from "Van" (Forest) and "Sugandh" (Fragrance), our name reflects our commitment to natural purity. For over four decades, we have sourced the finest whole spices directly from farmers across India, ensuring that only the most aromatic and flavorful spices reach your kitchen.
             </p>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 max-w-4xl mx-auto">
-                <div className="p-8 bg-white rounded-none shadow-sm border border-content/5 group hover:bg-secondary transition-all">
-                    <Award className="text-secondary group-hover:text-white mb-4 mx-auto transition-colors" size={36} />
-                    <h4 className="font-bold text-content group-hover:text-white transition-colors uppercase tracking-widest text-xs">Premium Grade</h4>
+            <div className="grid grid-cols-3 gap-3 md:gap-6 pt-4 max-w-4xl mx-auto">
+                <div className="p-4 md:p-8 bg-white rounded-none shadow-sm border border-content/5 group hover:bg-secondary transition-all flex flex-col items-center">
+                    <Award className="text-secondary group-hover:text-white mb-2 md:mb-4 transition-colors" size={24} />
+                    <h4 className="font-bold text-content group-hover:text-white transition-colors uppercase tracking-widest text-[8px] md:text-xs text-center">Premium Grade</h4>
                 </div>
-                <div className="p-8 bg-white rounded-none shadow-sm border border-content/5 group hover:bg-secondary transition-all">
-                    <Zap className="text-secondary group-hover:text-white mb-4 mx-auto transition-colors" size={36} />
-                    <h4 className="font-bold text-content group-hover:text-white transition-colors uppercase tracking-widest text-xs">Traditional Method</h4>
+                <div className="p-4 md:p-8 bg-white rounded-none shadow-sm border border-content/5 group hover:bg-secondary transition-all flex flex-col items-center">
+                    <Zap className="text-secondary group-hover:text-white mb-2 md:mb-4 transition-colors" size={24} />
+                    <h4 className="font-bold text-content group-hover:text-white transition-colors uppercase tracking-widest text-[8px] md:text-xs text-center">Traditional Method</h4>
                 </div>
-                <div className="p-8 bg-white rounded-none shadow-sm border border-content/5 group hover:bg-secondary transition-all">
-                    <ShieldCheck className="text-secondary group-hover:text-white mb-4 mx-auto transition-colors" size={36} />
-                    <h4 className="font-bold text-content group-hover:text-white transition-colors uppercase tracking-widest text-xs">No Additives</h4>
+                <div className="p-4 md:p-8 bg-white rounded-none shadow-sm border border-content/5 group hover:bg-secondary transition-all flex flex-col items-center">
+                    <ShieldCheck className="text-secondary group-hover:text-white mb-2 md:mb-4 transition-colors" size={24} />
+                    <h4 className="font-bold text-content group-hover:text-white transition-colors uppercase tracking-widest text-[8px] md:text-xs text-center">No Additives</h4>
                 </div>
             </div>
             

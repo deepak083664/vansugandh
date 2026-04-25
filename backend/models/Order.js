@@ -35,6 +35,48 @@ const orderSchema = new mongoose.Schema({
   },
   paidAt: {
     type: Date
+  },
+  // Delivery Partner System Fields
+  orderId: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  shipmentId: {
+    type: String
+  },
+  courierName: {
+    type: String
+  },
+  paymentMode: {
+    type: String,
+    enum: ['COD', 'Prepaid'],
+    default: 'COD'
+  },
+  deliveryAddress: {
+    type: String,
+    required: true
+  },
+  deliveryPhones: {
+    type: String,
+    required: true
+  },
+  physicalWeight: {
+    type: Number,
+    default: 1.0 // default 1kg
+  },
+  dimensions: {
+    type: String,
+    default: '10x10x10'
+  },
+  trackingEvents: [{
+    status: String,
+    location: String,
+    timestamp: Date,
+    message: String
+  }],
+  estimatedDelivery: {
+    type: Date
   }
 }, { timestamps: true });
 

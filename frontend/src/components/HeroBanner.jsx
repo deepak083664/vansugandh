@@ -8,36 +8,38 @@ const HeroBanner = () => {
       {/* Background Image with Parallax-like effect */}
       <div className="absolute inset-0 z-0">
         <img 
-          src={heroBannerImg} 
+          src="/herobg.png" 
           alt="Premium Indian Spices" 
           className="w-full h-full object-cover scale-105"
         />
-        {/* Modern multi-layer overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-content/90 via-content/40 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-content/20 to-transparent"></div>
+        {/* Modern multi-layer overlay - Adjusted for better visibility on the left */}
+        <div className="absolute inset-0 bg-gradient-to-r from-content/60 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-content/40 to-transparent"></div>
       </div>
 
-      {/* Decorative Floating Elements (CSS animated) */}
+      {/* Decorative Floating Elements - Removed top-left element as requested */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden hidden lg:block">
-        <div className="absolute top-1/4 left-10 animate-fade-in opacity-20 transform -rotate-12">
-            <Leaf size={120} className="text-primary fill-primary/20" />
-        </div>
         <div className="absolute bottom-1/4 right-20 animate-fade-in opacity-10 transform rotate-45 delay-300">
             <Star size={180} className="text-secondary fill-secondary/20" />
         </div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-3xl animate-fade-in">
-          <h1 className="text-7xl md:text-9xl font-bold text-surface mb-8 leading-[1]">
-            <span className="block italic font-brand text-primary drop-shadow-sm mb-2 text-5xl md:text-6xl">VanSugandh</span>
+      <div className="container mx-auto px-6 relative z-10 h-full flex flex-col justify-end pb-20 md:pb-32">
+        <div className="max-w-2xl animate-fade-in">
+          <h1 className="text-4xl md:text-6xl font-bold text-surface mb-6 leading-none drop-shadow-lg">
+            <img 
+              src="/brandname.png" 
+              alt="VanSugandh" 
+              className="h-10 md:h-20 w-auto object-contain mb-1" 
+              style={{ filter: 'drop-shadow(0.5px 0.5px 0 white) drop-shadow(-0.5px -0.5px 0 white) drop-shadow(0.5px -0.5px 0 white) drop-shadow(-0.5px 0.5px 0 white)' }}
+            />
             Pure Heritage
           </h1>
           
-          <div className="flex flex-wrap gap-6">
-            <button className="group bg-primary text-content px-12 py-5 rounded-full font-bold flex items-center gap-3 hover:bg-white transition-all shadow-2xl hover:shadow-primary/20 hover:-translate-y-1">
+          <div className="flex flex-wrap gap-4">
+            <button className="group bg-primary text-content px-8 py-3.5 rounded-full font-bold flex items-center gap-2 hover:bg-white transition-all shadow-xl hover:-translate-y-1 text-xs uppercase tracking-widest">
               Shop Now
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>

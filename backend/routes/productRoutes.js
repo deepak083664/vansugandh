@@ -5,10 +5,14 @@ const {
   getProductById,
   createProduct, 
   updateProduct, 
-  deleteProduct 
+  deleteProduct,
+  bulkDiscount,
+  clearAllDiscounts
 } = require('../controllers/productController');
 
 router.route('/').get(getProducts).post(createProduct);
+router.post('/bulk-discount', bulkDiscount);
+router.post('/clear-discounts', clearAllDiscounts);
 router.route('/:id').get(getProductById).put(updateProduct).delete(deleteProduct);
 
 module.exports = router;

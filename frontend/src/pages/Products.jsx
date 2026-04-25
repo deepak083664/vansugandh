@@ -24,10 +24,10 @@ const ProductCard = ({ product }) => {
   const isWishlisted = isInWishlist(product._id);
 
   return (
-    <div className="group bg-white rounded-3xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] transition-all duration-500 border border-content/10 relative flex flex-col h-full hover:-translate-y-2">
+    <div className="group bg-white rounded-2xl overflow-hidden transition-all duration-500 relative flex flex-col h-full border border-secondary/5 shadow-md hover:shadow-2xl hover:-translate-y-1">
       {product.tag && (
-        <div className="absolute top-5 left-5 z-20">
-            <span className="bg-secondary/95 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest leading-none shadow-md">
+        <div className="absolute top-4 left-4 z-20">
+            <span className="bg-primary text-content text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-widest shadow-sm">
                 {product.tag}
             </span>
         </div>
@@ -35,57 +35,62 @@ const ProductCard = ({ product }) => {
       
       <Link to={`/product/${product._id || product.id}`} className="absolute inset-0 z-30 block" />
 
-      <div className="absolute top-5 right-5 z-40 flex flex-col gap-3 translate-x-8 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500">
+      <div className="absolute top-4 right-4 z-40 flex flex-col gap-2 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500">
           <button 
-            onClick={() => toggleWishlist(product)}
-            className={`p-3 rounded-full shadow-lg transition-all transform hover:scale-110 ${isWishlisted ? 'bg-red-500 text-white' : 'bg-white/90 backdrop-blur-md text-content hover:bg-red-500 hover:text-white'}`}
+            onClick={(e) => { e.preventDefault(); toggleWishlist(product); }}
+            className={`p-2.5 rounded-full shadow-lg transition-all transform hover:scale-110 ${isWishlisted ? 'bg-red-500 text-white' : 'bg-white/90 backdrop-blur-md text-content hover:bg-red-500 hover:text-white'}`}
           >
-              <Heart size={18} fill={isWishlisted ? "currentColor" : "none"} strokeWidth={isWishlisted ? 0 : 2} />
+              <Heart size={16} fill={isWishlisted ? "currentColor" : "none"} strokeWidth={isWishlisted ? 0 : 2} />
           </button>
       </div>
 
-      <div className="relative aspect-[4/5] overflow-hidden bg-surface">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+      <div className="relative aspect-square overflow-hidden bg-surface/50">
+        <img src={product.image || heroImage} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out" />
         
-        <img src={product.image || heroImage} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-[1.15] transition-transform duration-700 ease-out z-0 relative origin-center" />
-        
-        <div className="absolute bottom-6 left-0 right-0 px-6 z-40 flex justify-center">
+        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 flex items-center justify-center p-4">
             <button 
-              onClick={() => addToCart(product)}
-              className="w-full bg-white text-content py-3.5 rounded-2xl font-bold translate-y-16 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-2 hover:bg-secondary hover:text-white shadow-xl hover:shadow-secondary/30"
+              onClick={(e) => { e.preventDefault(); addToCart(product); }}
+              className="w-full bg-white text-content py-3 rounded-xl font-bold translate-y-4 group-hover:translate-y-0 transition-all duration-500 flex items-center justify-center gap-2 hover:bg-secondary hover:text-white shadow-xl"
             >
-              <ShoppingCart size={18} className="transform group-hover:-rotate-12 transition-transform duration-300" />
-              <span>Add to Cart</span>
+              <ShoppingCart size={14} />
+              <span className="text-[9px] uppercase tracking-widest">Add to Bag</span>
             </button>
         </div>
       </div>
 
-      <div className="p-6 pt-5 bg-white z-20 relative grow flex flex-col justify-between">
-        <div>
-            <div className="flex items-center gap-1.5 mb-3">
+      <div className="p-4 flex flex-col grow bg-white">
+        <div className="mb-2">
+            {/* Star Rating */}
+            <div className="flex items-center justify-end gap-1 mb-1.5">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} size={12} className={i < Math.floor(product.rating || 5) ? "fill-primary text-primary" : "text-gray-200"} />
+                <Star key={i} size={10} className={i < Math.floor(product.rating || 4) ? "fill-primary text-primary" : "text-gray-200"} />
               ))}
-              <span className="text-[10px] text-content/30 ml-1 font-bold tracking-widest uppercase mt-0.5">({product.rating || 5.0})</span>
+              <span className="text-[9px] text-content/30 font-bold ml-1">({product.rating || 4.5})</span>
             </div>
-            <h3 className="text-lg font-bold text-content leading-tight mb-4 group-hover:text-secondary transition-all duration-300 tracking-tight line-clamp-2 min-h-[3rem]">{product.name}</h3>
+            <h3 className="text-base md:text-lg font-black text-content font-display leading-tight hover:text-secondary transition-colors tracking-tight line-clamp-2">{product.name}</h3>
         </div>
         
-        <div className="flex items-center gap-3 mt-auto">
-          <span className="text-2xl font-black text-content tracking-tighter">
-            ₹{String(product.price).replace(/[^0-9.]/g, '')}
-          </span>
-          
-          {product.oldPrice && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-content/20 line-through font-bold">
-                ₹{String(product.oldPrice).replace(/[^0-9.]/g, '')}
-              </span>
-              <span className="text-[10px] font-black text-white bg-secondary px-2 py-1 rounded-lg uppercase tracking-widest">
-                {Math.round((1 - (parseFloat(String(product.price).replace(/[^0-9.]/g, '')) / parseFloat(String(product.oldPrice).replace(/[^0-9.]/g, '')))) * 100)}% OFF
-              </span>
-            </div>
-          )}
+        <div className="mt-1 flex flex-col gap-0.5">
+          <div className="flex items-center gap-2">
+            <span className="text-[8px] font-black text-secondary uppercase tracking-wider">
+              -{product.discount > 0 
+                ? product.discount 
+                : product.oldPrice 
+                  ? Math.round((1 - (parseFloat(String(product.price).replace(/[^0-9.]/g, '')) / parseFloat(String(product.oldPrice).replace(/[^0-9.]/g, '')))) * 100)
+                  : 25}%
+            </span>
+            <span className="text-[10px] text-content/30 line-through font-bold">
+              ₹{product.oldPrice 
+                ? String(product.oldPrice).replace(/[^0-9.]/g, '') 
+                : Math.round(parseFloat(String(product.price).replace(/[^0-9.]/g, '')) * 1.25)}
+            </span>
+          </div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-xl font-black text-content tracking-tighter leading-none">
+              ₹{String(product.price).replace(/[^0-9.]/g, '')}
+            </span>
+            <span className="text-[8px] text-content/40 font-bold uppercase tracking-widest">M.R.P.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -138,7 +143,7 @@ const Products = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
                 {loading ? (
                   [...Array(10)].map((_, i) => (
-                    <div key={i} className="animate-pulse bg-white rounded-3xl h-[400px] shadow-sm border border-content/5"></div>
+                    <div key={i} className="animate-pulse bg-white rounded-none h-[400px] shadow-sm border border-content/5"></div>
                   ))
                 ) : (
                   products

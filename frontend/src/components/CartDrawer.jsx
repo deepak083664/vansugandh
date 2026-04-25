@@ -11,13 +11,53 @@ const CartDrawer = () => {
   const { user, loginWithGoogle } = useContext(AuthContext);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
+  const [couponCode, setCouponCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState('');
+  const [isValidating, setIsValidating] = useState(false);
+
+  const validateCoupon = async () => {
+    if (!couponCode) return;
+    setIsValidating(true);
+    setCouponError('');
+    try {
+      const res = await fetch('http://localhost:5000/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode, totalAmount: getCartTotal() })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setDiscount(data.discountAmount);
+        setAppliedCoupon(data);
+        setCouponError('');
+      } else {
+        setCouponError(data.message);
+        setDiscount(0);
+        setAppliedCoupon(null);
+      }
+    } catch (err) {
+      setCouponError('Error validating coupon');
+    } finally {
+      setIsValidating(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setDiscount(0);
+    setCouponCode('');
+  };
+
+  const finalTotal = getCartTotal() - discount;
 
   const handleCheckout = () => {
     if (!user) {
       setShowAuthModal(true);
     } else {
-      const message = `Hello VanSugandh! I'd like to place an order:\n\n${cart.map(item => `- ${item.name} (${item.weight}) x ${item.quantity} - ₹${parseFloat(String(item.price).replace(/[^0-9.]/g, '')) * item.quantity}`).join('\n')}\n\nTotal: ₹${getCartTotal()}\n\nPlease guide me with the next steps.`;
-      window.open(`https://wa.me/919876543210?text=${encodeURIComponent(message)}`, '_blank');
+      setIsCartOpen(false);
+      navigate('/checkout');
     }
   };
 
@@ -109,14 +149,52 @@ const CartDrawer = () => {
             {/* Footer */}
             {cart.length > 0 && (
               <div className="px-6 py-8 border-t border-secondary/5 bg-surface/30 space-y-6">
+                {/* Coupon Section */}
+                <div className="space-y-3">
+                  <div className="relative">
+                    <input 
+                      type="text" 
+                      placeholder="Coupon Code (e.g. VANSU30)" 
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      disabled={appliedCoupon}
+                      className={`w-full bg-white border-2 p-3.5 pr-24 rounded-2xl outline-none font-bold text-sm transition-all ${appliedCoupon ? 'border-green-500/30 bg-green-50/20 text-green-700' : couponError ? 'border-red-500/30' : 'border-secondary/5 focus:border-secondary/20'}`}
+                    />
+                    {appliedCoupon ? (
+                      <button 
+                        onClick={removeCoupon}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-black text-red-500 uppercase tracking-widest px-4 py-2 hover:bg-red-50 rounded-xl transition-all"
+                      >
+                        Remove
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={validateCoupon}
+                        disabled={isValidating || !couponCode}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-secondary text-white text-[10px] font-black uppercase tracking-[0.2em] px-5 py-2.5 rounded-xl hover:bg-secondary/90 transition-all disabled:opacity-50 disabled:grayscale"
+                      >
+                        {isValidating ? '...' : 'Apply'}
+                      </button>
+                    )}
+                  </div>
+                  {couponError && <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest pl-2">{couponError}</p>}
+                  {appliedCoupon && <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest pl-2">Coupon Applied Successfully!</p>}
+                </div>
+
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-sm font-bold text-content/40 px-1">
                     <span>Subtotal</span>
                     <span>₹{getCartTotal()}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xl font-black text-content px-1">
+                  {discount > 0 && (
+                    <div className="flex justify-between items-center text-sm font-bold text-green-600 px-1">
+                      <span>Discount ({appliedCoupon?.code})</span>
+                      <span>-₹{discount}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center text-xl font-black text-content px-1 pt-2 border-t border-secondary/5">
                     <span>Order Total</span>
-                    <span>₹{getCartTotal()}</span>
+                    <span>₹{finalTotal}</span>
                   </div>
                 </div>
 
