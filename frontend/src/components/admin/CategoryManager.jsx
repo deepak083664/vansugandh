@@ -1,3 +1,4 @@
+import API_BASE_URL from '../../config';
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Search, CheckCircle2, RotateCcw, LayoutGrid, Upload } from 'lucide-react';
 
@@ -17,7 +18,7 @@ const CategoryManager = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/categories');
+      const res = await fetch(`${API_BASE_URL}/api/categories`);
       if (res.ok) {
         const data = await res.json();
         setCategories(data);
@@ -59,7 +60,7 @@ const CategoryManager = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/upload', {
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: 'POST',
         body: data
       });
@@ -77,7 +78,7 @@ const CategoryManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isEditing = !!currentCategory;
-    const url = isEditing ? `http://localhost:5000/api/categories/${currentCategory._id}` : 'http://localhost:5000/api/categories';
+    const url = isEditing ? `${API_BASE_URL}/api/categories/${currentCategory._id}` : `${API_BASE_URL}/api/categories`;
     
     try {
       const res = await fetch(url, {
@@ -100,7 +101,7 @@ const CategoryManager = () => {
   const handleDeleteCategory = async (id) => {
     if (window.confirm('Are you sure you want to delete this category? Products using this category will remain, but you won\'t be able to select this category anymore.')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/categories/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_BASE_URL}/api/categories/${id}`, { method: 'DELETE' });
         if (res.ok) fetchData();
       } catch (err) {
         console.error(err);

@@ -1,3 +1,4 @@
+import API_BASE_URL from '../../config';
 import React, { useState } from 'react';
 import { Percent, Trash2, Zap, AlertCircle, CheckCircle2 } from 'lucide-react';
 
@@ -18,7 +19,7 @@ const BulkDiscountManager = () => {
     setStatus({ type: '', message: '' });
 
     try {
-      const res = await fetch('http://localhost:5000/api/products/bulk-discount', {
+      const res = await fetch(`${API_BASE_URL}/api/products/bulk-discount`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ percentage })
@@ -44,7 +45,7 @@ const BulkDiscountManager = () => {
     setStatus({ type: '', message: '' });
 
     try {
-      const res = await fetch('http://localhost:5000/api/products/clear-discounts', { method: 'POST' });
+      const res = await fetch(`${API_BASE_URL}/api/products/clear-discounts`, { method: 'POST' });
       if (res.ok) {
         setStatus({ type: 'success', message: 'All discounts cleared and original prices restored!' });
       } else {

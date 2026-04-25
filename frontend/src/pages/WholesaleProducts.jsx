@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Store, ChevronRight, PackageOpen } from 'lucide-react';
@@ -75,7 +76,7 @@ const WholesaleProducts = () => {
     window.scrollTo(0, 0);
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/products');
+        const res = await fetch(`${API_BASE_URL}/api/products`);
         if (!res.ok) throw new Error('API Error');
         const data = await res.json();
         

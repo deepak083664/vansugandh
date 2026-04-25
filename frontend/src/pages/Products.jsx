@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE_URL from '../config';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Heart, Star, Filter, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -104,7 +105,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/products');
+        const res = await fetch(`${API_BASE_URL}/api/products`);
         if (!res.ok) throw new Error('API Error');
         const data = await res.json();
         

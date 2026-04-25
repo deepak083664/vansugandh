@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/admin/Sidebar';
@@ -34,10 +35,10 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       const [statsRes, ordersRes, usersRes, revRes] = await Promise.all([
-        fetch('http://localhost:5000/api/admin/stats'),
-        fetch('http://localhost:5000/api/admin/orders'),
-        fetch('http://localhost:5000/api/admin/users'),
-        fetch('http://localhost:5000/api/admin/analytics/revenue')
+        fetch(`${API_BASE_URL}/api/admin/stats`),
+        fetch(`${API_BASE_URL}/api/admin/orders`),
+        fetch(`${API_BASE_URL}/api/admin/users`),
+        fetch(`${API_BASE_URL}/api/admin/analytics/revenue`)
       ]);
 
       if (statsRes.ok) setStats(await statsRes.json());

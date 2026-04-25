@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React from 'react';
 import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight, ShoppingCart, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -22,7 +23,7 @@ const CartDrawer = () => {
     setIsValidating(true);
     setCouponError('');
     try {
-      const res = await fetch('http://localhost:5000/api/coupons/validate', {
+      const res = await fetch(`${API_BASE_URL}/api/coupons/validate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: couponCode, totalAmount: getCartTotal() })

@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import turmeric from '../assets/turmeric.png';
@@ -148,7 +149,7 @@ const FeaturedProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/products');
+        const res = await fetch(`${API_BASE_URL}/api/products`);
         if (!res.ok) throw new Error('API Error');
         const data = await res.json();
         
@@ -197,12 +198,25 @@ const FeaturedProducts = () => {
           ) : (
             products
               .filter(p => !p.isWholesale)
-              .slice(0, 4)
+              .slice(0, 8)
               .map(product => (
                 <ProductCard key={product._id || product.id} product={product} />
               ))
           )}
         </div>
+
+        {/* Bottom View All Button */}
+        {!loading && products.filter(p => !p.isWholesale).length > 8 && (
+          <div className="mt-16 flex justify-center">
+            <Link 
+              to="/products" 
+              className="group flex items-center gap-4 bg-content text-white px-10 py-5 rounded-none font-bold uppercase tracking-[0.3em] text-[10px] hover:bg-secondary transition-all duration-500 shadow-xl shadow-content/10"
+            >
+              View All Products
+              <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

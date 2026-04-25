@@ -1,3 +1,4 @@
+import API_BASE_URL from '../../config';
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Tag, Calendar, IndianRupee, Percent } from 'lucide-react';
 
@@ -15,7 +16,7 @@ const CouponManager = () => {
 
   const fetchCoupons = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/coupons', {
+      const res = await fetch(`${API_BASE_URL}/api/coupons`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('adminToken')}` // Assuming admin auth uses token for now, or cookie
         }
@@ -37,7 +38,7 @@ const CouponManager = () => {
   const handleAddCoupon = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/coupons', {
+      const res = await fetch(`${API_BASE_URL}/api/coupons`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +59,7 @@ const CouponManager = () => {
   const handleDeleteCoupon = async (id) => {
     if (!window.confirm('Are you sure you want to delete this coupon?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/coupons/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/coupons/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('adminToken')}`

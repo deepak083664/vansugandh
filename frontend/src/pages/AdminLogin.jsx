@@ -1,9 +1,11 @@
+import API_BASE_URL from '../config';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock } from 'lucide-react';
+import { Lock, Eye, EyeOff } from 'lucide-react';
 
 const AdminLogin = () => {
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:5000/api/admin/login', {
+      const res = await fetch(`${API_BASE_URL}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })
@@ -43,7 +45,7 @@ const AdminLogin = () => {
             <Lock size={32} />
           </div>
           <h2 className="text-3xl font-bold text-content font-display tracking-tight mb-2">Admin Portal</h2>
-          <p className="text-content/60 font-sans text-sm">Enter your secret passphrase to continue</p>
+          <p className="text-content/60 font-sans text-sm">Enter your password to continue</p>
         </div>
 
         {error && (
@@ -55,15 +57,24 @@ const AdminLogin = () => {
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-sm font-bold text-content mb-2 pl-1">Passphrase</label>
-            <input
-              type="password"
-              placeholder="••••••••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-5 py-4 bg-surface rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary/50 text-content placeholder-content/30 transition-all font-sans"
-              required
-            />
+            <label className="block text-sm font-bold text-content mb-2 pl-1">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-5 py-4 bg-surface rounded-2xl border-none outline-none focus:ring-2 focus:ring-primary/50 text-content placeholder-content/30 transition-all font-sans pr-14"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-content/40 hover:text-secondary transition-colors"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           <button

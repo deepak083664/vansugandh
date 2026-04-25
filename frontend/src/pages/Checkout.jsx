@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -48,7 +49,7 @@ const Checkout = () => {
         paymentMode
       };
 
-      const res = await fetch('http://localhost:5000/api/orders/createOrder', {
+      const res = await fetch(`${API_BASE_URL}/api/orders/createOrder`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

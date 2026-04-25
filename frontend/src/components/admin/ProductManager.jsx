@@ -1,3 +1,4 @@
+import API_BASE_URL from '../../config';
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Search, Upload, CheckCircle2, RotateCcw, Package, Store, X } from 'lucide-react';
 
@@ -27,8 +28,8 @@ const ProductManager = () => {
     setLoading(true);
     try {
       const [prodRes, catRes] = await Promise.all([
-        fetch('http://localhost:5000/api/products'),
-        fetch('http://localhost:5000/api/categories')
+        fetch(`${API_BASE_URL}/api/products`),
+        fetch(`${API_BASE_URL}/api/categories`)
       ]);
       
       if (prodRes.ok) {
@@ -132,7 +133,7 @@ const ProductManager = () => {
     const data = new FormData();
     files.forEach(file => data.append('images', file));
     try {
-      const res = await fetch('http://localhost:5000/api/upload', { method: 'POST', body: data });
+      const res = await fetch(`${API_BASE_URL}/api/upload`, { method: 'POST', body: data });
       if (res.ok) {
         const { filePaths } = await res.json();
         setFormData(prev => ({
@@ -167,7 +168,7 @@ const ProductManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isEditing = !!currentProduct;
-    const url = isEditing ? `http://localhost:5000/api/products/${currentProduct._id}` : 'http://localhost:5000/api/products';
+    const url = isEditing ? `${API_BASE_URL}/api/products/${currentProduct._id}` : `${API_BASE_URL}/api/products`;
     try {
       const res = await fetch(url, {
         method: isEditing ? 'PUT' : 'POST',
@@ -186,7 +187,7 @@ const ProductManager = () => {
     if (!window.confirm(`Apply ${bulkDiscountVal}% discount to ALL products?`)) return;
     setIsBulkLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/products/bulk-discount', {
+      const res = await fetch(`${API_BASE_URL}/api/products/bulk-discount`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ percentage: bulkDiscountVal })
@@ -203,7 +204,7 @@ const ProductManager = () => {
     if (!window.confirm('Clear all discounts and restore original prices?')) return;
     setIsBulkLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/products/clear-discounts', { method: 'POST' });
+      const res = await fetch(`${API_BASE_URL}/api/products/clear-discounts`, { method: 'POST' });
       if (res.ok) {
         alert('All discounts cleared!');
         fetchData();
@@ -214,7 +215,7 @@ const ProductManager = () => {
   const handleDeleteProduct = async (id) => {
     if (window.confirm('Delete this product?')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_BASE_URL}/api/products/${id}`, { method: 'DELETE' });
         if (res.ok) fetchData();
       } catch (err) { console.error(err); }
     }

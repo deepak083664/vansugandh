@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -13,7 +14,7 @@ const TrackOrder = () => {
 
   const fetchTracking = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/orders/track-order/${orderId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/orders/track-order/${orderId}`, {
         credentials: 'include'
       });
       if (res.ok) {

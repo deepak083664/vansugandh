@@ -1,3 +1,4 @@
+import API_BASE_URL from '../config';
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -17,7 +18,7 @@ const MyOrders = () => {
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/orders/myorders', {
+        const res = await fetch(`${API_BASE_URL}/api/orders/myorders`, {
           credentials: 'include'
         });
         if (res.ok) {
